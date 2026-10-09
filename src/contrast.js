@@ -95,7 +95,7 @@ export function parsePalette(text, max = 20) {
       errors.push(`Linha ${index + 1}: nenhuma cor encontrada.`);
       return;
     }
-    const label = line.slice(0, tokens[0].index).replace(/[\s:=\-–—,;|]+$/, '').trim();
+    const label = line.slice(0, tokens[0].index).replace(/[\s:=\-\u2013\u2014,;|]+$/, '').trim();
     tokens.forEach((m, i) => {
       const color = parseColor(m[0]);
       if (!color) {

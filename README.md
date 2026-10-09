@@ -1,4 +1,4 @@
-# Contraste Acessível — verifique e corrija o contraste de cores (HTML + JavaScript)
+# Contraste Acessível: verifique e corrija o contraste de cores (HTML + JavaScript)
 
 Texto cinza-claro em fundo branco fica bonito no Figma e ilegível para muita gente no celular, no sol ou com a visão cansada. O Contraste Acessível calcula a razão de contraste da WCAG 2.x entre texto e fundo, mostra em quais critérios o par passa e, quando não passa, sugere a cor mais próxima que resolve.
 
@@ -72,4 +72,4 @@ Issues e pull requests são bem-vindos.
 
 ## Licença
 
-MIT — veja [LICENSE](LICENSE).
+MIT. Veja [LICENSE](LICENSE).

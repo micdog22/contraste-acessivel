@@ -103,7 +103,7 @@ function parseHsl(args) {
   return { r: Math.round(r), g: Math.round(g), b: Math.round(b), a };
 }
 
-// Retorna { r, g, b (inteiros 0–255), a (0–1) } ou null se o texto não for uma cor reconhecida.
+// Retorna { r, g, b (inteiros de 0 a 255), a (de 0 a 1) } ou null se o texto não for uma cor reconhecida.
 export function parseColor(input) {
   const text = String(input ?? '').trim().toLowerCase();
   if (!text) return null;

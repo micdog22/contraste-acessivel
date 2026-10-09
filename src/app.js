@@ -125,7 +125,7 @@ function update() {
 
   if (!text || !background) {
     notesEl.replaceChildren(...notes);
-    ratioEl.textContent = '—';
+    ratioEl.textContent = '-';
     ratioHint.textContent = 'Corrija as cores acima para ver o resultado.';
     criteriaEl.replaceChildren();
     suggestionsEl.replaceChildren();
@@ -172,7 +172,7 @@ function renderPalette() {
   const rows = colors.map((fg, i) => el('tr', {}, el('th', { scope: 'row', class: 'row-head' }, chip(fg.color), fg.label),
     ...colors.map((bg, j) => {
       const ratio = matrix[i][j];
-      if (ratio === null) return el('td', { class: 'same' }, el('span', { class: 'cell-info' }, '—'));
+      if (ratio === null) return el('td', { class: 'same' }, el('span', { class: 'cell-info' }, '-'));
       const g = grade(ratio);
       const cls = { AAA: 'g-aaa', AA: 'g-aa', 'AA grande': 'g-large', Falha: 'g-fail' }[g];
       const pair = pairContrast(fg.color, bg.color);
