@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contraste Acessível — verifique e corrija o contraste de cores (WCAG)</title>
+  <meta name="description" content="Calcule a razão de contraste WCAG 2.x entre texto e fundo, veja se passa em AA e AAA, receba sugestões de cores, monte a matriz de uma paleta e simule daltonismo.">
+  <meta name="theme-color" content="#1d4ed8">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌗</text></svg>">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Contraste Acessível</h1>
+    <p class="lead">Verifique e corrija o contraste entre texto e fundo segundo a WCAG 2.x.</p>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="colors-title">
+      <h2 id="colors-title">Cores</h2>
+      <div class="color-fields">
+        <div class="color-field">
+          <label for="text-color">Cor do texto</label>
+          <div class="color-input">
+            <input type="text" id="text-color" spellcheck="false" autocomplete="off" aria-describedby="color-notes">
+            <label for="text-picker" class="visually-hidden">Seletor da cor do texto</label>
+            <input type="color" id="text-picker">
+          </div>
+        </div>
+        <button type="button" class="btn secondary swap" id="swap" aria-label="Inverter texto e fundo" title="Inverter texto e fundo">⇄</button>
+        <div class="color-field">
+          <label for="bg-color">Cor do fundo</label>
+          <div class="color-input">
+            <input type="text" id="bg-color" spellcheck="false" autocomplete="off" aria-describedby="color-notes">
+            <label for="bg-picker" class="visually-hidden">Seletor da cor do fundo</label>
+            <input type="color" id="bg-picker">
+          </div>
+        </div>
+      </div>
+      <p class="muted small">Formatos aceitos: <code>#rgb</code>, <code>#rrggbb</code>, <code>#rrggbbaa</code>, <code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code> e <code>hsla()</code>.</p>
+      <div id="color-notes" class="notes" aria-live="polite"></div>
+    </section>
+
+    <section class="card result" aria-labelledby="result-title">
+      <h2 id="result-title">Resultado</h2>
+      <div class="result-grid">
+        <div>
+          <p class="ratio" id="ratio" aria-live="polite">—</p>
+          <p class="muted small" id="ratio-hint"></p>
+        </div>
+        <ul class="criteria" id="criteria"></ul>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="preview-title">
+      <h2 id="preview-title">Pré-visualização</h2>
+      <div class="preview" id="preview">
+        <p class="p-14">14 px · Texto pequeno, como notas de rodapé.</p>
+        <p class="p-16">16 px · Texto normal de um parágrafo.</p>
+        <p class="p-18b">18,66 px em negrito · texto grande (14 pt negrito)</p>
+        <p class="p-24">24 px · texto grande (18 pt)</p>
+        <div class="ui-sample">
+          <span class="fake-button">Botão de exemplo</span>
+          <svg class="fake-icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="muted-sample">ícone e borda</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="suggest-title">
+      <h2 id="suggest-title">Sugestões</h2>
+      <p class="muted small">Cores mais próximas que passam, mudando só a luminosidade (o L do HSL) do texto ou do fundo. Valem para texto normal.</p>
+      <div id="suggestions" aria-live="polite"></div>
+    </section>
+
+    <section class="card" aria-labelledby="sim-title">
+      <h2 id="sim-title">Simulação de daltonismo</h2>
+      <p class="muted small">Aproximação de como o par aparece para pessoas com cada tipo de deficiência de visão de cores (forma mais intensa).</p>
+      <div class="sim-grid" id="simulation"></div>
+    </section>
+
+    <section class="card" aria-labelledby="palette-title">
+      <h2 id="palette-title">Modo paleta</h2>
+      <label for="palette">Cores da paleta (uma por linha, com nome opcional)</label>
+      <textarea id="palette" rows="6" spellcheck="false"></textarea>
+      <div id="palette-errors" class="notes" aria-live="polite"></div>
+      <div class="matrix-wrap" id="matrix-wrap" tabindex="0" role="region" aria-label="Matriz de contraste da paleta"></div>
+      <p class="muted small">Linhas: cor do texto. Colunas: cor do fundo. AAA ≥ 7:1, AA ≥ 4,5:1, «AA grande» ≥ 3:1 (só texto grande e componentes).</p>
+    </section>
+
+    <section class="card explain" aria-labelledby="about-title">
+      <h2 id="about-title">Como o contraste é calculado</h2>
+      <p>
+        A WCAG compara a <strong>luminância relativa</strong> das cores: quanta luz cada uma emite, de 0 (preto) a 1 (branco).
+        Cada canal sRGB é convertido para valor linear e os três são somados com pesos que seguem a sensibilidade do olho
+        (0,2126 para o vermelho, 0,7152 para o verde e 0,0722 para o azul). A razão de contraste é
+        <strong>(L1 + 0,05) / (L2 + 0,05)</strong>, sendo L1 a cor mais clara. Vai de 1:1 (cores iguais) a 21:1 (preto no branco).
+      </p>
+      <ul>
+        <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">1.4.3 Contraste (mínimo)</a>, nível AA: 4,5:1 para texto normal e 3:1 para texto grande.</li>
+        <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-enhanced.html">1.4.6 Contraste (melhorado)</a>, nível AAA: 7:1 para texto normal e 4,5:1 para texto grande.</li>
+        <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">1.4.11 Contraste não textual</a>, nível AA: 3:1 para componentes de interface (bordas de campos, ícones, indicador de foco) e partes de gráficos necessárias para entendê-los.</li>
+      </ul>
+      <p>
+        <strong>Texto grande</strong> é o que tem pelo menos 18 pt (24 px) ou 14 pt (cerca de 18,66 px) em negrito.
+        Texto de logotipos, puramente decorativo ou de componentes desabilitados não tem exigência de contraste.
+      </p>
+      <p class="muted small">
+        Cores com transparência: o texto é combinado com o fundo, e um fundo transparente é considerado sobre branco.
+        A simulação de daltonismo usa as matrizes de Machado, Oliveira e Fernandes (2009) e é só uma aproximação.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Tudo roda no seu navegador. Código aberto no <a href="https://github.com/micdog22/contraste-acessivel">GitHub</a> · Licença MIT</p>
+  </footer>
+</body>
+</html>

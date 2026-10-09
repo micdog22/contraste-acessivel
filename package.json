@@ -1,0 +1,11 @@
+{
+  "name": "contraste-acessivel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Verifique e corrija o contraste de cores segundo a WCAG 2.x, com sugestões, matriz de paleta e simulação de daltonismo.",
+  "type": "module",
+  "scripts": { "test": "node --test" },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/micdog22/contraste-acessivel.git" },
+  "homepage": "https://micdog22.github.io/contraste-acessivel/"
+}
